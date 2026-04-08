@@ -1,12 +1,15 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.android)
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
+
+kotlin { jvmToolchain(21) }
 
 android {
     compileSdk = 36
@@ -34,4 +37,5 @@ dependencies {
     api(libs.androidx.core.ktx)
     api(libs.androidx.compose.foundation)
     api(libs.androidx.compose.material3)
+    implementation(libs.androidx.core.ktx)
 }

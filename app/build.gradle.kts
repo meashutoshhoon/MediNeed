@@ -1,10 +1,13 @@
 @file:Suppress("UnstableApiUsage")
 
+import org.gradle.kotlin.dsl.support.kotlinCompilerOptions
+import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
@@ -91,11 +94,14 @@ android {
     namespace = "com.jb.medineed.app"
 }
 
+
 base {
     archivesName = "MediNeed-${android.defaultConfig.versionName}"
 }
 
 ktfmt { kotlinLangStyle() }
+
+kotlin { jvmToolchain(21) }
 
 room { schemaDirectory("$projectDir/schemas") }
 ksp { arg("room.incremental", "true") }
