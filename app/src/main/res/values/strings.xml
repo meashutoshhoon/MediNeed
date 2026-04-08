@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">MediNeed</string>
+    <string name="app_name" translatable="false">MediNeed</string>
+    <string name="follow_system">System</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
 </resources>
