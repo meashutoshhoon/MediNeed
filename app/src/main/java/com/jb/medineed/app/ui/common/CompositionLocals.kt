@@ -12,6 +12,8 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import com.jb.medineed.app.ui.theme.DEFAULT_SEED_COLOR
+import com.jb.medineed.app.ui.theme.FixedColorRoles
 import com.jb.medineed.app.util.DarkThemePreference
 import com.jb.medineed.app.util.PreferenceUtil
 import com.jb.medineed.app.util.paletteStyles
