@@ -25,3 +25,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "MediNeed"
 include(":app")
+include(":color")
