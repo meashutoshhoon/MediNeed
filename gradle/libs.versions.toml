@@ -1,12 +1,12 @@
 [versions]
 accompanist = "0.37.3"
-androidGradlePlugin = "9.1.0"
+#noinspection AndroidGradlePluginVersion
+androidGradlePlugin = "8.3.2"
 androidxComposeBom = "2026.03.01"
 androidxCore = "1.18.0"
 androidMaterial = "1.13.0"
 androidxAppCompat = "1.7.1"
 androidxActivity = "1.13.0"
-graphics = "1.1.0"
 constraintLayout = "1.1.1"
 
 androidxLifecycle = "2.10.0"
@@ -14,7 +14,6 @@ androidxNavigation = "2.9.7"
 
 androidxEspresso = "3.7.0"
 androidxTestExt = "1.3.0"
-
 
 coil = "2.7.0"
 
@@ -28,17 +27,16 @@ serialization = "1.10.0"
 okhttp = "5.3.2"
 
 room = "2.8.4"
-ksp = "2.0.20-1.0.25"
+ksp = "2.3.6"
 
 mmkv = "2.4.0"
-# pin to v1.3.x for 32-bit support
-
+workManager = "2.11.2"
+itext = "9.6.0"
 koin = "4.2.0"
 
 ktfmt = "0.26.0"
 
 [libraries]
-
 
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
 android-material = { group = "com.google.android.material", name = "material", version.ref = "androidMaterial" }
@@ -56,17 +54,12 @@ androidx-compose-material-iconsExtended = { group = "androidx.compose.material",
 androidx-compose-animation = { group = "androidx.compose.animation", name = "animation" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
 
-androidx-compose-material = { group = "androidx.compose.material", name = "material" }
-
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-compose-material3-windowSizeClass = { group = "androidx.compose.material3", name = "material3-window-size-class" }
-
-androidx-graphics-shapes = { group = "androidx.graphics", name = "graphics-shapes", version.ref = "graphics" }
 
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 
 androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
-androidx-compose-ui-test = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 
@@ -75,9 +68,7 @@ androidx-constraintlayout-compose = { group = "androidx.constraintlayout", name 
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigation" }
 
 androidx-test-ext = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "androidxTestExt" }
-
 androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxEspresso" }
-
 
 coil-kt-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
@@ -90,12 +81,16 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 koin-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
 
-
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 
+androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workManager" }
+
+itext-core = { group = "com.itextpdf", name = "itext-core", version.ref = "itext" }
+
 mmkv = { group = "com.tencent", name = "mmkv", version.ref = "mmkv" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
@@ -112,7 +107,8 @@ accompanist = [
     "accompanist-permissions"
 ]
 
-androidxCompose = ["androidx-compose-ui",
+androidxCompose = [
+    "androidx-compose-ui",
     "androidx-compose-ui-tooling-preview",
     "androidx-compose-material-iconsExtended",
     "androidx-compose-material3",
@@ -123,7 +119,9 @@ androidxCompose = ["androidx-compose-ui",
     "androidx-constraintlayout-compose"
 ]
 
-core = ["androidx-activity-compose",
+core = [
+    "androidx-activity-compose",
     "android-material",
     "androidx-appcompat",
-    "androidx-core-ktx"]
+    "androidx-core-ktx"
+]

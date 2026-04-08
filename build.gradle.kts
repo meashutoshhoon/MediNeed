@@ -1,9 +1,9 @@
 plugins {
-    // Android
+    // Android basic
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
 
-    // Serialization
+    // Kotlin Serialization
     alias(libs.plugins.kotlin.serialization) apply false
 
     // KSP
