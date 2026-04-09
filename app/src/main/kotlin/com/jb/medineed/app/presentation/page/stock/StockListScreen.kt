@@ -1,17 +1,58 @@
 package com.jb.medineed.app.presentation.page.stock
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.automirrored.filled.Sort
+import androidx.compose.material.icons.automirrored.filled.TrendingDown
+import androidx.compose.material.icons.filled.AccountBalance
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Inventory2
+import androidx.compose.material.icons.filled.MedicalServices
+import androidx.compose.material.icons.filled.RemoveShoppingCart
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.jb.medineed.app.R
 import com.jb.medineed.app.domain.model.Medicine
 import com.jb.medineed.app.domain.model.SortOrder
 import com.jb.medineed.app.presentation.components.EmptyState
@@ -36,55 +77,44 @@ fun StockListScreen(
     val uiState by viewModel.uiState.collectAsState()
     var showSortMenu by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf<Medicine?>(null) }
-    val scope = rememberCoroutineScope()
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("MediStock", fontWeight = FontWeight.Bold) },
-                actions = {
-                    Box {
-                        IconButton(onClick = { showSortMenu = true }) {
-                            Icon(Icons.Default.Sort, "Sort")
-                        }
-                        DropdownMenu(expanded = showSortMenu, onDismissRequest = { showSortMenu = false }) {
-                            Text(
-                                "Sort By",
-                                style = MaterialTheme.typography.labelSmall,
-                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                                color = MaterialTheme.colorScheme.primary
+    Scaffold(topBar = {
+        TopAppBar(title = {
+            Text(stringResource(R.string.app_name), fontWeight = FontWeight.Bold)
+        }, actions = {
+            Box {
+                IconButton(onClick = { showSortMenu = true }) {
+                    Icon(Icons.AutoMirrored.Filled.Sort, "Sort")
+                }
+                DropdownMenu(
+                    expanded = showSortMenu, onDismissRequest = { showSortMenu = false }) {
+                    Text(
+                        stringResource(R.string.sort_by),
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    SortOrder.entries.forEach { sort ->
+                        DropdownMenuItem(text = { Text(sort.label) }, onClick = {
+                            viewModel.onSortOrderChange(sort); showSortMenu = false
+                        }, leadingIcon = {
+                            if (uiState.sortOrder == sort) Icon(
+                                Icons.Default.Check, null, tint = MaterialTheme.colorScheme.primary
                             )
-                            SortOrder.entries.forEach { sort ->
-                                DropdownMenuItem(
-                                    text = { Text(sort.label) },
-                                    onClick = { viewModel.onSortOrderChange(sort); showSortMenu = false },
-                                    leadingIcon = {
-                                        if (uiState.sortOrder == sort)
-                                            Icon(Icons.Default.Check, null, tint = MaterialTheme.colorScheme.primary)
-                                    }
-                                )
-                            }
-                        }
+                        })
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary
-                )
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = onAddMedicine,
-                modifier = Modifier.navigationBarsPadding(),
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            ) {
-                Icon(Icons.Default.Add, null)
+                }
             }
+        })
+    }, floatingActionButton = {
+        FloatingActionButton(
+            onClick = onAddMedicine,
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
+        ) {
+            Icon(Icons.Default.Add, null)
         }
-    ) { padding ->
+    }) { padding ->
         LazyColumn(
             modifier = Modifier.padding(padding),
             contentPadding = PaddingValues(16.dp),
@@ -97,21 +127,21 @@ fun StockListScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     StatCard(
-                        title = "Total",
+                        title = stringResource(R.string.total),
                         value = uiState.totalCount.toString(),
                         icon = Icons.Default.Inventory2,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.weight(1f)
                     )
                     StatCard(
-                        title = "Low Stock",
+                        title = stringResource(R.string.low_stock),
                         value = uiState.lowStockCount.toString(),
-                        icon = Icons.Default.TrendingDown,
+                        icon = Icons.AutoMirrored.Filled.TrendingDown,
                         color = WarningOrange,
                         modifier = Modifier.weight(1f)
                     )
                     StatCard(
-                        title = "Out of Stock",
+                        title = stringResource(R.string.out_of_stock),
                         value = uiState.outOfStockCount.toString(),
                         icon = Icons.Default.RemoveShoppingCart,
                         color = ErrorRed,
@@ -133,9 +163,18 @@ fun StockListScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(Icons.Default.AccountBalance, null, tint = SuccessGreen, modifier = Modifier.size(20.dp))
+                            Icon(
+                                Icons.Default.AccountBalance,
+                                null,
+                                tint = SuccessGreen,
+                                modifier = Modifier.size(20.dp)
+                            )
                             Spacer(Modifier.width(8.dp))
-                            Text("Total Inventory Value", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
+                            Text(
+                                stringResource(R.string.total_inventory_value),
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium
+                            )
                         }
                         Text(
                             "₹%.2f".format(uiState.totalInventoryValue),
@@ -152,7 +191,7 @@ fun StockListScreen(
                 OutlinedTextField(
                     value = uiState.searchQuery,
                     onValueChange = viewModel::onSearchQueryChange,
-                    placeholder = { Text("Search by name, generic name, category...") },
+                    placeholder = { Text(stringResource(R.string.search)) },
                     leadingIcon = { Icon(Icons.Default.Search, null) },
                     trailingIcon = {
                         if (uiState.searchQuery.isNotBlank()) {
@@ -163,7 +202,7 @@ fun StockListScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
-                    shape = MaterialTheme.shapes.medium
+                    shape = MaterialTheme.shapes.large
                 )
             }
 
@@ -175,15 +214,13 @@ fun StockListScreen(
                             FilterChip(
                                 selected = uiState.selectedCategory.isEmpty(),
                                 onClick = { viewModel.onCategoryChange("") },
-                                label = { Text("All") }
-                            )
+                                label = { Text(stringResource(R.string.all)) })
                         }
                         items(uiState.categories) { cat ->
                             FilterChip(
                                 selected = uiState.selectedCategory == cat,
                                 onClick = { viewModel.onCategoryChange(if (uiState.selectedCategory == cat) "" else cat) },
-                                label = { Text(cat) }
-                            )
+                                label = { Text(cat) })
                         }
                     }
                 }
@@ -192,7 +229,11 @@ fun StockListScreen(
             // Medicine list
             if (uiState.isLoading) {
                 item {
-                    Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
+                    Box(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(32.dp), contentAlignment = Alignment.Center
+                    ) {
                         CircularProgressIndicator()
                     }
                 }
@@ -200,8 +241,10 @@ fun StockListScreen(
                 item {
                     Box(Modifier.fillParentMaxSize()) {
                         EmptyState(
-                            message = if (uiState.searchQuery.isNotBlank()) "No medicines found for \"${uiState.searchQuery}\""
-                            else "No medicines added yet.\nTap + to add your first medicine.",
+                            message = if (uiState.searchQuery.isNotBlank()) stringResource(
+                                R.string.no_medicine_found_with_query, uiState.searchQuery
+                            )
+                            else stringResource(R.string.no_medicine_empty),
                             icon = Icons.Default.MedicalServices
                         )
                     }
@@ -211,8 +254,7 @@ fun StockListScreen(
                     MedicineCard(
                         medicine = medicine,
                         onClick = { onMedicineClick(medicine.id) },
-                        onEditClick = { onEditClick(medicine.id) }
-                    )
+                        onEditClick = { onEditClick(medicine.id) })
                 }
                 item { Spacer(Modifier.height(72.dp)) } // FAB clearance
             }
@@ -223,8 +265,14 @@ fun StockListScreen(
     showDeleteDialog?.let { medicine ->
         AlertDialog(
             onDismissRequest = { showDeleteDialog = null },
-            title = { Text("Delete Medicine") },
-            text = { Text("Are you sure you want to delete \"${medicine.name}\"? This action cannot be undone.") },
+            title = { Text(stringResource(R.string.delete_medicine_title)) },
+            text = {
+                Text(
+                    stringResource(
+                        R.string.delete_medicine_message, medicine.name
+                    )
+                )
+            },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -232,12 +280,16 @@ fun StockListScreen(
                             viewModel.deleteMedicine(medicine)
                         }
                         showDeleteDialog = null
-                    }
-                ) { Text("Delete", color = ErrorRed) }
+                    }) {
+                    Text(
+                        stringResource(R.string.delete), color = ErrorRed
+                    )
+                }
             },
             dismissButton = {
-                TextButton(onClick = { showDeleteDialog = null }) { Text("Cancel") }
-            }
-        )
+                TextButton(onClick = {
+                    showDeleteDialog = null
+                }) { Text(stringResource(R.string.cancel)) }
+            })
     }
 }

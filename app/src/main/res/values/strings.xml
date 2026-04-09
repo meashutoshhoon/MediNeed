@@ -22,4 +22,30 @@
     <string name="language_settings">Set display language</string>
     <string name="dynamic_color">Dynamic color</string>
     <string name="dynamic_color_desc">Apply colors from wallpapers to the app theme</string>
+    <string name="sort_by">Sort By</string>
+    <string name="total">Total</string>
+    <string name="low_stock">Low Stock</string>
+    <string name="out_of_stock">Out of Stock</string>
+    <string name="total_inventory_value">Total Inventory Value</string>
+    <string name="search">Search by name, generic name, category…</string>
+    <string name="all">All</string>
+    <string name="no_medicine_found_with_query">
+        No medicines found for "%1$s"
+    </string>
+
+    <string name="no_medicine_empty">
+        No medicines added yet.
+        Tap + to add your first medicine.
+    </string>
+
+    <string name="delete_medicine_title">
+        Delete Medicine
+    </string>
+
+    <string name="delete_medicine_message">
+        Are you sure you want to delete "%1$s"? This action cannot be undone.
+    </string>
+
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
 </resources>
