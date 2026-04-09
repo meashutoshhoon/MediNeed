@@ -75,13 +75,14 @@ fun StockListScreen(
             )
         },
         floatingActionButton = {
-            ExtendedFloatingActionButton(
+            FloatingActionButton(
                 onClick = onAddMedicine,
-                icon = { Icon(Icons.Default.Add, null) },
-                text = { Text("Add Medicine") },
+                modifier = Modifier.navigationBarsPadding(),
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
-            )
+            ) {
+                Icon(Icons.Default.Add, null)
+            }
         }
     ) { padding ->
         LazyColumn(

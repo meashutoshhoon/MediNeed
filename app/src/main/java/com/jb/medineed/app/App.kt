@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import com.google.android.material.color.DynamicColors
 import com.jb.medineed.app.di.appModules
+import com.jb.medineed.app.worker.StockAlertWorker
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
