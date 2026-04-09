@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuOpen
 import androidx.compose.material.icons.automirrored.filled.TrendingDown
@@ -221,6 +222,7 @@ private fun RailLayout(
             Surface(
                 color = MaterialTheme.colorScheme.surfaceContainer,
                 tonalElevation = 2.dp,
+                shape = RoundedCornerShape(topEnd = 25.dp, bottomEnd = 25.dp),
                 modifier = Modifier
                     .fillMaxHeight()
                     .width(railWidth)

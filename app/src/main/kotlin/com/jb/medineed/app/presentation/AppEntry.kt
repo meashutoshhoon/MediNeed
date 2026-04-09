@@ -22,7 +22,6 @@ import com.jb.medineed.app.presentation.page.home.AdaptiveNavigation
 import com.jb.medineed.app.presentation.page.lowstock.LowStockScreen
 import com.jb.medineed.app.presentation.page.outofstock.OutOfStockScreen
 import com.jb.medineed.app.presentation.page.reports.ReportsScreen
-import com.jb.medineed.app.presentation.page.settings.SettingsPage
 import com.jb.medineed.app.presentation.page.settings.appearance.AppearancePreferences
 import com.jb.medineed.app.presentation.page.settings.appearance.DarkThemePreferences
 import com.jb.medineed.app.presentation.page.settings.appearance.LanguagePage
@@ -139,16 +138,6 @@ fun NavGraphBuilder.settingsGraph(
 ) {
     navigation(startDestination = Route.SETTINGS_PAGE, route = Route.SETTINGS) {
         animatedComposable(Route.SETTINGS_PAGE) {
-            SettingsPage(onNavigateBack = onNavigateBack, onNavigateTo = onNavigateTo)
-        }
-//        animatedComposable(Route.ABOUT) {
-//            AboutPage(
-//                onNavigateBack = onNavigateBack,
-//                onNavigateToCreditsPage = { onNavigateTo(Route.CREDITS) },
-//            )
-//        }
-//        animatedComposable(Route.CREDITS) { CreditsPage(onNavigateBack) }
-        animatedComposable(Route.APPEARANCE) {
             AppearancePreferences(onNavigateBack = onNavigateBack, onNavigateTo = onNavigateTo)
         }
         animatedComposable(Route.LANGUAGES) { LanguagePage { onNavigateBack() } }
