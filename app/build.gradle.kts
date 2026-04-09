@@ -40,7 +40,7 @@ android {
 
     defaultConfig {
         applicationId = "com.jb.medineed.app"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
 

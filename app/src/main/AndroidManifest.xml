@@ -56,7 +56,7 @@
         </provider>
 
         <receiver
-            android:name=".util.BootReceiver"
+            android:name=".worker.BootReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

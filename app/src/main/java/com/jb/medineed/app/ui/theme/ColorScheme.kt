@@ -11,6 +11,11 @@ import com.kyant.monet.TonalPalettes
 import com.kyant.monet.TonalPalettes.Companion.toTonalPalettes
 import io.material.hct.Hct
 
+
+val ErrorRed          = Color(0xFFD32F2F)
+val WarningOrange     = Color(0xFFF57C00)
+val SuccessGreen      = Color(0xFF388E3C)
+
 @Composable
 fun Number.autoDark(isDarkTheme: Boolean = LocalDarkTheme.current.isDarkTheme()): Double =
     if (!isDarkTheme) this.toDouble()
