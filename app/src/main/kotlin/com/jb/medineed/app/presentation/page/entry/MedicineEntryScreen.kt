@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.MedicalServices
 import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material.icons.filled.Numbers
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Science
 import androidx.compose.material.icons.filled.Tag
@@ -67,6 +68,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.jb.medineed.app.presentation.components.dateFormatter
+import com.jb.medineed.app.presentation.page.barcode.BarcodeScannerScreen
 import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDate
 
@@ -109,6 +111,9 @@ fun MedicineEntryScreen(
     var showMfgDatePicker by remember { mutableStateOf(false) }
     var showExpDatePicker by remember { mutableStateOf(false) }
     var categoryExpanded by remember { mutableStateOf(false) }
+
+    // Add this state at the top of MedicineEntryScreen
+    var showBarcodeScanner by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -181,6 +186,15 @@ fun MedicineEntryScreen(
                 onValueChange = viewModel::onBatchNumberChange,
                 label = { Text("Batch Number *") },
                 leadingIcon = { Icon(Icons.Default.Tag, null) },
+                // ✅ ADD THIS trailingIcon
+                trailingIcon = {
+                    IconButton(onClick = { showBarcodeScanner = true }) {
+                        Icon(
+                            imageVector = Icons.Default.QrCodeScanner, // or use a custom icon
+                            contentDescription = "Scan Barcode"
+                        )
+                    }
+                },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(size = 18.dp),
                 singleLine = true
@@ -344,6 +358,16 @@ fun MedicineEntryScreen(
             title = "Select Expiry Date",
             onDateSelected = { viewModel.onExpiryDateChange(it) },
             onDismiss = { showExpDatePicker = false })
+    }
+
+    if (showBarcodeScanner) {
+        BarcodeScannerScreen(
+            onBarcodeScanned = { scannedBatch ->
+                viewModel.onBatchNumberChange(scannedBatch)
+                showBarcodeScanner = false
+            },
+            onNavigateBack = { showBarcodeScanner = false }
+        )
     }
 }
 
