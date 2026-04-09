@@ -24,7 +24,7 @@ data class StockTransactionEntity(
     val id: Long = 0,
     val medicineId: Long,
     val transactionType: TransactionType,
-    val quantityChange: Int,          // Negative for sales, positive for restock
+    val quantityChange: Int,
     val quantityBefore: Int,
     val quantityAfter: Int,
     val note: String = "",

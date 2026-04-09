@@ -21,13 +21,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MediNeed"
         tools:targetApi="33">
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.MediNeed">
+            android:theme="@style/Theme.MediNeed.Splashscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

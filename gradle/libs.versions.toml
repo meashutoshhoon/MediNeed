@@ -5,6 +5,7 @@ androidx-core = "1.18.0"
 androidx-activity = "1.13.0"
 androidx-appcompat = "1.7.1"
 android-material = "1.13.0"
+androidx-splashScreen = "1.2.0"
 constraintlayout = "1.1.1"
 
 # Compose
@@ -35,6 +36,9 @@ work = "2.11.2"
 coil = "2.7.0"
 itext = "9.6.0"
 
+# ShapeIndicator
+shapeIndicator = "2.1.0"
+
 # Testing
 junit4 = "4.13.2"
 androidx-test = "1.3.0"
@@ -50,6 +54,7 @@ ktfmt = "0.26.0"
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
+androidx-splashScreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidx-splashScreen" }
 android-material = { group = "com.google.android.material", name = "material", version.ref = "android-material" }
 
 # Lifecycle
@@ -97,6 +102,10 @@ room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 
+# ShapeIndicators
+shapeIndicator = { group = "io.github.dp-hridayan", name = "shapeindicators", version.ref = "shapeIndicator" }
+
+
 # WorkManager
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
 
@@ -137,6 +146,7 @@ core = [
     "androidx-activity-compose",
     "android-material",
     "androidx-appcompat",
+    "androidx-splashScreen",
     "androidx-core-ktx"
 ]
 

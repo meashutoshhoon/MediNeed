@@ -13,8 +13,8 @@ data class MedicineEntity(
     val category: String,
     val quantity: Int,
     val lowStockThreshold: Int = 10,
-    val manufacturingDate: Long,   // Stored as epoch millis
-    val expiryDate: Long,          // Stored as epoch millis
+    val manufacturingDate: Long,
+    val expiryDate: Long,
     val pricePerUnit: Double = 0.0,
     val supplier: String = "",
     val createdAt: Long = System.currentTimeMillis(),

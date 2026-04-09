@@ -8,7 +8,7 @@ import androidx.compose.ui.res.stringResource
 import com.google.android.material.color.DynamicColors
 import com.jb.medineed.app.App.Companion.applicationScope
 import com.jb.medineed.app.R
-import com.jb.medineed.app.ui.theme.DEFAULT_SEED_COLOR
+import com.jb.medineed.app.presentation.theme.DEFAULT_SEED_COLOR
 import com.kyant.monet.PaletteStyle
 import com.tencent.mmkv.MMKV
 import java.util.Locale

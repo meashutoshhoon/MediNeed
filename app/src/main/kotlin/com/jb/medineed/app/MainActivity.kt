@@ -8,7 +8,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.TrendingDown
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Inventory2
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -25,15 +24,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.jb.medineed.app.ui.common.LocalDarkTheme
-import com.jb.medineed.app.ui.common.SettingsProvider
-import com.jb.medineed.app.ui.navigation.MediStockNavHost
-import com.jb.medineed.app.ui.navigation.Screen
-import com.jb.medineed.app.ui.page.AppEntry
-import com.jb.medineed.app.ui.theme.MediTheme
+import com.jb.medineed.app.presentation.common.LocalDarkTheme
+import com.jb.medineed.app.presentation.common.SettingsProvider
+import com.jb.medineed.app.presentation.navigation.MediStockNavHost
+import com.jb.medineed.app.presentation.navigation.Screen
+import com.jb.medineed.app.presentation.theme.MediTheme
 import com.jb.medineed.app.util.PreferenceUtil
 import com.jb.medineed.app.util.setLanguage
 import kotlinx.coroutines.runBlocking
@@ -48,6 +47,7 @@ data class BottomNavItem(
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT < 33) {
             runBlocking { setLanguage(PreferenceUtil.getLocaleFromPreference()) }

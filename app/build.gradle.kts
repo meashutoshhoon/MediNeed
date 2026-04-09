@@ -7,8 +7,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.room)
     alias(libs.plugins.ktfmt.gradle)
 }
@@ -137,19 +137,13 @@ dependencies {
     implementation(libs.bundles.accompanist)
     implementation(libs.androidx.compose.ui.tooling)
 
-    // Image
-    implementation(libs.coil.kt.compose)
-
     // Kotlin
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.serialization.json)
 
-    // WorkManager
-    implementation(libs.androidx.work.runtime.ktx)
-
-    // PDF
-    implementation(libs.itext.core)
+    // ShapeIndicator
+    implementation(libs.shapeIndicator)
 
     // DI
     implementation(libs.koin.android)
@@ -160,9 +154,20 @@ dependencies {
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
 
-    // Network / Storage
+    // Work
+    implementation(libs.androidx.work.runtime.ktx)
+
+    // Network
     implementation(libs.okhttp)
+
+    // Image
+    implementation(libs.coil.kt.compose)
+
+    // Storage
     implementation(libs.mmkv)
+
+    // PDF
+    implementation(libs.itext.core)
 
     // Tests
     testImplementation(libs.junit4)
