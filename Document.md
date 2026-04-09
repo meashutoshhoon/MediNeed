@@ -81,7 +81,7 @@ MediNeed uses a modern Android stack with carefully selected libraries:
 
 ## 4. System Architecture
 
-MediNeed follows a **modular MVVM architecture** with clear separation of layers:
+MediNeed follows a **MVVM architecture** with clear separation of layers:
 
 ---
 
