@@ -40,3 +40,21 @@
 -dontwarn javax.xml.stream.XMLResolver
 -dontwarn javax.xml.stream.util.XMLEventAllocator
 -dontwarn sharpen.config.MappingConfiguration
+
+# ─── iText PDF ───────────────────────────────────────────────────────────────
+-keep class com.itextpdf.** { *; }
+-dontwarn com.itextpdf.**
+
+# ─── iText depends on these at runtime ───────────────────────────────────────
+-keep class org.apache.commons.** { *; }
+-dontwarn org.apache.commons.**
+
+-keep class org.bouncycastle.** { *; }
+-dontwarn org.bouncycastle.**
+
+# ─── FileProvider (used in sharePdf) ─────────────────────────────────────────
+-keep class androidx.core.content.FileProvider { *; }
+
+# ─── Java time / ZoneId used in buildMedicineTable ───────────────────────────
+-keep class java.time.** { *; }
+-dontwarn java.time.**
