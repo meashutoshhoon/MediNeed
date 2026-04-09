@@ -1,29 +1,19 @@
 plugins {
-    // Android basic
+    // Android
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
-    alias(libs.plugins.kotlin.android) apply false
 
-    // Kotlin Serialization
+    // Kotlin
+    alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.serialization) apply false
 
-    // KSP
+    // Build tools
     alias(libs.plugins.ksp) apply false
-
-    // Compose compiler
     alias(libs.plugins.compose.compiler) apply false
-
-    // Room database for local storage
     alias(libs.plugins.room) apply false
 }
 
-buildscript {
-    repositories {
-        mavenCentral()
-        google()
-    }
-}
-
-tasks.register("clean", Delete::class) {
+// Clean root build directory
+tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }
