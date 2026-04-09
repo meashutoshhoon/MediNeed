@@ -66,6 +66,8 @@ fun AppEntry() {
             animatedComposable(Route.STOCK_LIST) {
                 StockListScreen(onAddMedicine = {
                     navController.navigate(Route.MEDICINE_ENTRY)
+                }, onSettings = {
+                    navController.navigate(Route.SETTINGS_PAGE)
                 }, onMedicineClick = { id ->
                     navController.navigate(Route.STOCK_UPDATE id id)
                 }, onEditClick = { id ->

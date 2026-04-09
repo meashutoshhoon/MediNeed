@@ -1,15 +1,60 @@
 package com.jb.medineed.app.presentation.page.update
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.AddShoppingCart
+import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Inventory2
+import androidx.compose.material.icons.filled.Notes
+import androidx.compose.material.icons.filled.Numbers
+import androidx.compose.material.icons.filled.PlayCircle
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLocale
@@ -26,7 +71,7 @@ import com.jb.medineed.app.presentation.theme.WarningOrange
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 import kotlin.math.abs
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,7 +99,12 @@ fun StockUpdateScreen(
                     }
                 }
             }, navigationIcon = {
-                IconButton(onClick = onNavigateBack) { Icon(Icons.Default.ArrowBack, null) }
+                IconButton(onClick = onNavigateBack) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        null
+                    )
+                }
             }, colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 titleContentColor = MaterialTheme.colorScheme.onPrimary,
@@ -63,7 +113,11 @@ fun StockUpdateScreen(
             )
         }) { padding ->
         if (uiState.isLoading || medicine == null) {
-            Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding), contentAlignment = Alignment.Center
+            ) {
                 CircularProgressIndicator()
             }
             return@Scaffold
@@ -79,8 +133,7 @@ fun StockUpdateScreen(
                 AnimatedVisibility(visible = uiState.isSaved) {
                     Card(colors = CardDefaults.cardColors(containerColor = SuccessGreen.copy(alpha = 0.15f))) {
                         Row(
-                            Modifier.padding(12.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                            Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(Icons.Default.CheckCircle, null, tint = SuccessGreen)
                             Spacer(Modifier.width(8.dp))
@@ -98,8 +151,7 @@ fun StockUpdateScreen(
             item {
                 Card(shape = RoundedCornerShape(12.dp)) {
                     Column(
-                        Modifier.padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                        Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -161,7 +213,9 @@ fun StockUpdateScreen(
             item {
                 Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
                     Row(
-                        Modifier.fillMaxWidth().padding(20.dp),
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -304,7 +358,9 @@ fun StockUpdateScreen(
                                 uiState.adjustmentAmount.toIntOrNull()
                                     ?.let { viewModel.setExactQuantity(it) }
                             },
-                            modifier = Modifier.fillMaxWidth().height(52.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(52.dp),
                             enabled = uiState.adjustmentAmount.isNotBlank()
                         ) {
                             Icon(Icons.Default.Tune, null)
@@ -322,7 +378,9 @@ fun StockUpdateScreen(
                     if (uiState.transactions.isEmpty()) {
                         item {
                             Box(
-                                Modifier.fillMaxWidth().padding(32.dp),
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(32.dp),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
@@ -361,9 +419,7 @@ private fun TransactionRow(txn: StockTransaction) {
         TransactionType.RESTOCK -> Triple(SuccessGreen, Icons.Default.AddShoppingCart, "+")
         TransactionType.ADJUSTMENT -> Triple(WarningOrange, Icons.Default.Tune, "→")
         TransactionType.INITIAL -> Triple(
-            MaterialTheme.colorScheme.primary,
-            Icons.Default.PlayCircle,
-            "+"
+            MaterialTheme.colorScheme.primary, Icons.Default.PlayCircle, "+"
         )
     }
     val sdf = SimpleDateFormat("dd MMM yyyy, HH:mm", LocalLocale.current.platformLocale)
@@ -380,8 +436,7 @@ private fun TransactionRow(txn: StockTransaction) {
                     color = color
                 )
                 if (txn.note.isNotBlank()) Text(
-                    txn.note,
-                    style = MaterialTheme.typography.bodySmall
+                    txn.note, style = MaterialTheme.typography.bodySmall
                 )
                 Text(
                     sdf.format(Date(txn.timestamp)),

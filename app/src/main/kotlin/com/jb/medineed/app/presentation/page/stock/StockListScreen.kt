@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Inventory2
 import androidx.compose.material.icons.filled.MedicalServices
 import androidx.compose.material.icons.filled.RemoveShoppingCart
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -70,6 +71,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun StockListScreen(
     onAddMedicine: () -> Unit,
+    onSettings: () -> Unit,
     onMedicineClick: (Long) -> Unit,
     onEditClick: (Long) -> Unit,
     viewModel: StockListViewModel = koinViewModel()
@@ -83,8 +85,13 @@ fun StockListScreen(
             Text(stringResource(R.string.app_name), fontWeight = FontWeight.Bold)
         }, actions = {
             Box {
-                IconButton(onClick = { showSortMenu = true }) {
-                    Icon(Icons.AutoMirrored.Filled.Sort, "Sort")
+                Row {
+                    IconButton(onClick = { showSortMenu = true }) {
+                        Icon(Icons.AutoMirrored.Filled.Sort, "Sort")
+                    }
+                    IconButton(onClick = onSettings) {
+                        Icon(Icons.Filled.Settings, "Settings")
+                    }
                 }
                 DropdownMenu(
                     expanded = showSortMenu, onDismissRequest = { showSortMenu = false }) {
