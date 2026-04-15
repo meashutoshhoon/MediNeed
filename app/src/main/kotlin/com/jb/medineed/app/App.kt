@@ -22,6 +22,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
         MMKV.initialize(this)
 
         startKoin {
@@ -30,35 +31,43 @@ class App : Application() {
             modules(appModules)
         }
 
-        context = applicationContext
-        packageInfo =
-            packageManager.run {
-                if (Build.VERSION.SDK_INT >= 33)
-                    getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(0))
-                else getPackageInfo(packageName, 0)
-            }
+        context = this
         applicationScope = CoroutineScope(SupervisorJob())
+        packageInfo = getPkgInfo()
+
         DynamicColors.applyToActivitiesIfAvailable(this)
 
         createNotificationChannel()
         StockAlertWorker.schedule(this)
     }
 
+    private fun getPkgInfo(): PackageInfo =
+        if (Build.VERSION.SDK_INT >= 33)
+            packageManager.getPackageInfo(
+                packageName,
+                PackageManager.PackageInfoFlags.of(0)
+            )
+        else
+            @Suppress("DEPRECATION")
+            packageManager.getPackageInfo(packageName, 0)
+
     private fun createNotificationChannel() {
-        val channel = NotificationChannel(
-            StockAlertWorker.CHANNEL_ID,
-            "Stock Alerts",
-            NotificationManager.IMPORTANCE_HIGH
-        ).apply {
-            description = "Alerts for low stock and out of stock medicines"
-        }
         val manager = getSystemService(NotificationManager::class.java)
-        manager.createNotificationChannel(channel)
+        manager.createNotificationChannel(
+            NotificationChannel(
+                StockAlertWorker.CHANNEL_ID,
+                "Stock Alerts",
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                description = "Alerts for low stock and out of stock medicines"
+            }
+        )
     }
 
     companion object {
         lateinit var applicationScope: CoroutineScope
         lateinit var packageInfo: PackageInfo
-        @SuppressLint("StaticFieldLeak") lateinit var context: Context
+        @SuppressLint("StaticFieldLeak")
+        lateinit var context: Context
     }
 }

@@ -1,6 +1,6 @@
 [versions]
 # Android
-agp = "8.13.2"
+agp = "9.1.1"
 androidx-core = "1.18.0"
 androidx-activity = "1.13.0"
 androidx-appcompat = "1.7.1"
@@ -9,7 +9,7 @@ androidx-splashScreen = "1.2.0"
 constraintlayout = "1.1.1"
 
 # Compose
-compose-bom = "2026.03.01"
+compose-bom = "2026.04.00"
 accompanist = "0.37.3"
 
 # Lifecycle / Navigation
@@ -44,6 +44,12 @@ junit4 = "4.13.2"
 androidx-test = "1.3.0"
 espresso = "3.7.0"
 
+# Barcode Scanning
+barcodeScanning = "17.3.0"
+cameraCamera2 = "1.4.1"
+cameraLifecycle = "1.4.1"
+cameraView = "1.4.1"
+
 # Tools
 ktfmt = "0.26.0"
 
@@ -55,6 +61,7 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-splashScreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidx-splashScreen" }
+androidx-compose-material3-adaptive-navigation-suite = { group = "androidx.compose.material3", name = "material3-adaptive-navigation-suite" }
 android-material = { group = "com.google.android.material", name = "material", version.ref = "android-material" }
 
 # Lifecycle
@@ -105,6 +112,11 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 # ShapeIndicators
 shapeIndicator = { group = "io.github.dp-hridayan", name = "shapeindicators", version.ref = "shapeIndicator" }
 
+# Barcode Scanning
+androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "cameraView" }
+androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "cameraLifecycle" }
+androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "cameraCamera2" }
+barcode-scanning = { group = "com.google.mlkit", name = "barcode-scanning", version.ref = "barcodeScanning" }
 
 # WorkManager
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }

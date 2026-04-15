@@ -12,7 +12,6 @@ import com.jb.medineed.app.data.repository.MedicineRepository
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.concurrent.TimeUnit
-import kotlin.collections.filter
 
 class StockAlertWorker(
     context: Context,
@@ -21,42 +20,61 @@ class StockAlertWorker(
 
     private val repository: MedicineRepository by inject()
 
-    override suspend fun doWork(): Result {
-        return try {
-            val medicines = repository.getMedicinesNeedingAlert()
-            val outOfStock = medicines.filter { it.isOutOfStock }
-            val lowStock = medicines.filter { it.isLowStock }
+    override suspend fun doWork(): Result = try {
+        val medicines = repository.getMedicinesNeedingAlert()
 
-            if (outOfStock.isNotEmpty()) {
-                showNotification(
-                    id = NOTIF_ID_OUT_OF_STOCK,
-                    title = "⚠️ Out of Stock Alert",
-                    body = "${outOfStock.size} medicine(s) are completely out of stock: ${outOfStock.take(3).joinToString { it.name }}${if (outOfStock.size > 3) " and more…" else ""}",
-                    context = applicationContext
-                )
-            }
+        val (outOfStock, lowStock) = medicines.partition { it.isOutOfStock }
 
-            if (lowStock.isNotEmpty()) {
-                showNotification(
-                    id = NOTIF_ID_LOW_STOCK,
-                    title = "📉 Low Stock Warning",
-                    body = "${lowStock.size} medicine(s) are running low: ${lowStock.take(3).joinToString { "${it.name} (${it.quantity} left)" }}${if (lowStock.size > 3) " and more…" else ""}",
-                    context = applicationContext
-                )
-            }
-
-            Result.success()
-        } catch (e: Exception) {
-            Result.retry()
+        notifyIfNeeded(
+            id = NOTIF_ID_OUT_OF_STOCK,
+            items = outOfStock,
+            title = "⚠️ Out of Stock Alert"
+        ) {
+            it.name
         }
+
+        notifyIfNeeded(
+            id = NOTIF_ID_LOW_STOCK,
+            items = lowStock.filter { it.isLowStock },
+            title = "📉 Low Stock Warning"
+        ) {
+            "${it.name} (${it.quantity} left)"
+        }
+
+        Result.success()
+    } catch (_: Exception) {
+        Result.retry()
     }
 
-    private fun showNotification(id: Int, title: String, body: String, context: Context) {
+    private inline fun <T> notifyIfNeeded(
+        id: Int,
+        items: List<T>,
+        title: String,
+        crossinline formatter: (T) -> String
+    ) {
+        if (items.isEmpty()) return
+
+        val preview = items.take(3).joinToString { formatter(it) }
+        val body = buildString {
+            append("${items.size} medicine(s): ")
+            append(preview)
+            if (items.size > 3) append(" and more…")
+        }
+
+        showNotification(id, title, body)
+    }
+
+    private fun showNotification(id: Int, title: String, body: String) {
+        val context = applicationContext
+
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
+
         val pendingIntent = PendingIntent.getActivity(
-            context, id, intent,
+            context,
+            id,
+            intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
@@ -70,27 +88,18 @@ class StockAlertWorker(
             .setAutoCancel(true)
             .build()
 
-        val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        manager.notify(id, notification)
+        (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+            .notify(id, notification)
     }
 
     companion object {
         const val CHANNEL_ID = "medistock_stock_alerts"
-        const val WORK_NAME = "StockAlertWork"
+        private const val WORK_NAME = "StockAlertWork"
         private const val NOTIF_ID_OUT_OF_STOCK = 1001
         private const val NOTIF_ID_LOW_STOCK = 1002
 
         fun schedule(context: Context) {
-            val request = PeriodicWorkRequestBuilder<StockAlertWorker>(
-                repeatInterval = 6,
-                repeatIntervalTimeUnit = TimeUnit.HOURS
-            )
-                .setConstraints(
-                    Constraints.Builder()
-                        .setRequiresBatteryNotLow(false)
-                        .build()
-                )
-                .build()
+            val request = PeriodicWorkRequestBuilder<StockAlertWorker>(6, TimeUnit.HOURS).build()
 
             WorkManager.getInstance(context).enqueueUniquePeriodicWork(
                 WORK_NAME,
@@ -102,8 +111,8 @@ class StockAlertWorker(
 }
 
 class BootReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
+    override fun onReceive(context: Context, intent: Intent?) {
+        if (intent?.action == Intent.ACTION_BOOT_COMPLETED) {
             StockAlertWorker.schedule(context)
         }
     }

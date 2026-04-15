@@ -20,27 +20,35 @@ import kotlinx.coroutines.runBlocking
 import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {
+
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+
         if (Build.VERSION.SDK_INT < 33) {
-            runBlocking { setLanguage(PreferenceUtil.getLocaleFromPreference()) }
+            runBlocking {
+                setLanguage(PreferenceUtil.getLocaleFromPreference())
+            }
         }
+
         enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.auto(
-                lightScrim = Color.TRANSPARENT, darkScrim = Color.TRANSPARENT
-            ), navigationBarStyle = SystemBarStyle.auto(
-                lightScrim = Color.TRANSPARENT, darkScrim = Color.TRANSPARENT
-            )
+            statusBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT)
         )
+
         setContent {
             KoinContext {
                 val windowSizeClass = calculateWindowSizeClass(this)
-                SettingsProvider(windowWidthSizeClass = windowSizeClass.widthSizeClass) {
+
+                SettingsProvider(
+                    windowWidthSizeClass = windowSizeClass.widthSizeClass
+                ) {
+                    val themeState = LocalDarkTheme.current
+
                     MediTheme(
-                        darkTheme = LocalDarkTheme.current.isDarkTheme(),
-                        isHighContrastModeEnabled = LocalDarkTheme.current.isHighContrastModeEnabled,
+                        darkTheme = themeState.isDarkTheme(),
+                        isHighContrastModeEnabled = themeState.isHighContrastModeEnabled
                     ) {
                         AppEntry()
                     }

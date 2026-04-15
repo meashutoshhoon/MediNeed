@@ -106,7 +106,6 @@ object PreferenceUtil {
         }
     }
 
-
     data class AppSettings(
         val darkTheme: DarkThemePreference = DarkThemePreference(),
         val isDynamicColorEnabled: Boolean = false,

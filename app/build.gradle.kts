@@ -20,7 +20,7 @@ val baseVersionName = currentVersion.name
 
 android {
     namespace = "com.jb.medineed.app"
-    compileSdk = 36
+    compileSdk = 37
 
     // Signing (optional)
     if (keystoreFile.exists()) {
@@ -161,12 +161,15 @@ dependencies {
     implementation(libs.okhttp)
 
     // CameraX
-    implementation("androidx.camera:camera-camera2:1.4.1")
-    implementation("androidx.camera:camera-lifecycle:1.4.1")
-    implementation("androidx.camera:camera-view:1.4.1")
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+
+    // Adaptive Navigation
+    implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
 
     // ML Kit Barcode Scanning
-    implementation("com.google.mlkit:barcode-scanning:17.3.0")
+    implementation(libs.barcode.scanning)
 
     // Image
     implementation(libs.coil.kt.compose)
