@@ -9,7 +9,6 @@ object Route {
     const val APPEARANCE = "appearance"
     const val ABOUT = "about"
     const val CREDITS = "credits"
-    const val LANGUAGES = "languages"
     const val DARK_THEME = "dark_theme"
     const val SETTINGS = "settings"
 

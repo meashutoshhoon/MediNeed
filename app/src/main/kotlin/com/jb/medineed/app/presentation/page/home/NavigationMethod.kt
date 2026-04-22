@@ -59,6 +59,7 @@ fun AdaptiveNavigation(
         NavigationSuiteType.NavigationBar -> {
             currentRoute in navigationRoutes && !isSettings
         }
+
         else -> {
             currentRoute in navigationRoutes
         }

@@ -1,7 +1,5 @@
 package com.jb.medineed.app.util
 
-import android.os.Build
-import androidx.annotation.DeprecatedSinceApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -11,7 +9,6 @@ import com.jb.medineed.app.R
 import com.jb.medineed.app.presentation.theme.DEFAULT_SEED_COLOR
 import com.kyant.monet.PaletteStyle
 import com.tencent.mmkv.MMKV
-import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,14 +28,13 @@ const val NOT_SPECIFIED = 0
 const val DEFAULT = NOT_SPECIFIED
 const val SYSTEM_DEFAULT = NOT_SPECIFIED
 
-val paletteStyles =
-    listOf(
-        PaletteStyle.TonalSpot,
-        PaletteStyle.Spritz,
-        PaletteStyle.FruitSalad,
-        PaletteStyle.Vibrant,
-        PaletteStyle.Monochrome,
-    )
+val paletteStyles = listOf(
+    PaletteStyle.TonalSpot,
+    PaletteStyle.Spritz,
+    PaletteStyle.FruitSalad,
+    PaletteStyle.Vibrant,
+    PaletteStyle.Monochrome,
+)
 
 const val STYLE_TONAL_SPOT = 0
 const val STYLE_SPRITZ = 1
@@ -46,18 +42,16 @@ const val STYLE_FRUIT_SALAD = 2
 const val STYLE_VIBRANT = 3
 const val STYLE_MONOCHROME = 4
 
-private val BooleanPreferenceDefaults =
-    mapOf(
-        NOTIFICATION to true,
-    )
+private val BooleanPreferenceDefaults = mapOf(
+    NOTIFICATION to true,
+)
 
-private val IntPreferenceDefaults =
-    mapOf(
-        LANGUAGE to SYSTEM_DEFAULT,
-        PALETTE_STYLE to 0,
-        DARK_THEME_VALUE to DarkThemePreference.FOLLOW_SYSTEM,
-        WELCOME_DIALOG to 1,
-    )
+private val IntPreferenceDefaults = mapOf(
+    LANGUAGE to SYSTEM_DEFAULT,
+    PALETTE_STYLE to 0,
+    DARK_THEME_VALUE to DarkThemePreference.FOLLOW_SYSTEM,
+    WELCOME_DIALOG to 1,
+)
 
 object PreferenceUtil {
     private val kv: MMKV = MMKV.defaultMMKV()
@@ -73,8 +67,7 @@ object PreferenceUtil {
         default: Boolean = BooleanPreferenceDefaults.getOrElse(this) { false }
     ): Boolean = kv.decodeBool(this, default)
 
-    fun String.getLong(default: Long) =
-        kv.decodeLong(this, default)
+    fun String.getLong(default: Long) = kv.decodeLong(this, default)
 
     fun String.updateString(newString: String) = kv.encode(this, newString)
 
@@ -92,20 +85,6 @@ object PreferenceUtil {
 
     fun containsKey(key: String) = kv.containsKey(key)
 
-    @DeprecatedSinceApi(api = 33)
-    fun getLocaleFromPreference(): Locale? {
-        val languageCode = LANGUAGE.getInt()
-        return LocaleLanguageCodeMap.entries.find { it.value == languageCode }?.key
-    }
-
-    fun saveLocalePreference(locale: Locale?) {
-        if (Build.VERSION.SDK_INT >= 33) {
-            // No op
-        } else {
-            LANGUAGE.updateInt(LocaleLanguageCodeMap[locale] ?: SYSTEM_DEFAULT)
-        }
-    }
-
     data class AppSettings(
         val darkTheme: DarkThemePreference = DarkThemePreference(),
         val isDynamicColorEnabled: Boolean = false,
@@ -113,35 +92,33 @@ object PreferenceUtil {
         val paletteStyleIndex: Int = 0,
     )
 
-    private val mutableAppSettingsStateFlow =
-        MutableStateFlow(
-            AppSettings(
-                DarkThemePreference(
-                    darkThemeValue =
-                        kv.decodeInt(DARK_THEME_VALUE, DarkThemePreference.FOLLOW_SYSTEM),
-                    isHighContrastModeEnabled = kv.decodeBool(HIGH_CONTRAST, false),
-                ),
-                isDynamicColorEnabled =
-                    kv.decodeBool(DYNAMIC_COLOR, DynamicColors.isDynamicColorAvailable()),
-                seedColor = kv.decodeInt(THEME_COLOR, DEFAULT_SEED_COLOR),
-                paletteStyleIndex = kv.decodeInt(PALETTE_STYLE, 0),
-            )
+    private val mutableAppSettingsStateFlow = MutableStateFlow(
+        AppSettings(
+            DarkThemePreference(
+                darkThemeValue = kv.decodeInt(DARK_THEME_VALUE, DarkThemePreference.FOLLOW_SYSTEM),
+                isHighContrastModeEnabled = kv.decodeBool(HIGH_CONTRAST, false),
+            ),
+            isDynamicColorEnabled = kv.decodeBool(
+                DYNAMIC_COLOR,
+                DynamicColors.isDynamicColorAvailable()
+            ),
+            seedColor = kv.decodeInt(THEME_COLOR, DEFAULT_SEED_COLOR),
+            paletteStyleIndex = kv.decodeInt(PALETTE_STYLE, 0),
         )
+    )
     val AppSettingsStateFlow = mutableAppSettingsStateFlow.asStateFlow()
 
     fun modifyDarkThemePreference(
         darkThemeValue: Int = AppSettingsStateFlow.value.darkTheme.darkThemeValue,
-        isHighContrastModeEnabled: Boolean =
-            AppSettingsStateFlow.value.darkTheme.isHighContrastModeEnabled,
+        isHighContrastModeEnabled: Boolean = AppSettingsStateFlow.value.darkTheme.isHighContrastModeEnabled,
     ) {
         applicationScope.launch(Dispatchers.IO) {
             mutableAppSettingsStateFlow.update {
                 it.copy(
-                    darkTheme =
-                        AppSettingsStateFlow.value.darkTheme.copy(
-                            darkThemeValue = darkThemeValue,
-                            isHighContrastModeEnabled = isHighContrastModeEnabled,
-                        )
+                    darkTheme = AppSettingsStateFlow.value.darkTheme.copy(
+                        darkThemeValue = darkThemeValue,
+                        isHighContrastModeEnabled = isHighContrastModeEnabled,
+                    )
                 )
             }
             kv.encode(DARK_THEME_VALUE, darkThemeValue)

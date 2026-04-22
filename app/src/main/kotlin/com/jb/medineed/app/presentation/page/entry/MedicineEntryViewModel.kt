@@ -4,7 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jb.medineed.app.data.repository.MedicineRepository
 import com.jb.medineed.app.domain.model.Medicine
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -69,8 +74,12 @@ class MedicineEntryViewModel(private val repository: MedicineRepository) : ViewM
     fun onBatchNumberChange(v: String) = _uiState.update { it.copy(batchNumber = v) }
     fun onCategoryChange(v: String) = _uiState.update { it.copy(category = v) }
     fun onCustomCategoryChange(v: String) = _uiState.update { it.copy(customCategory = v) }
-    fun onQuantityChange(v: String) = _uiState.update { it.copy(quantity = v.filter { c -> c.isDigit() }) }
-    fun onThresholdChange(v: String) = _uiState.update { it.copy(lowStockThreshold = v.filter { c -> c.isDigit() }) }
+    fun onQuantityChange(v: String) =
+        _uiState.update { it.copy(quantity = v.filter { c -> c.isDigit() }) }
+
+    fun onThresholdChange(v: String) =
+        _uiState.update { it.copy(lowStockThreshold = v.filter { c -> c.isDigit() }) }
+
     fun onManufacturingDateChange(v: LocalDate) = _uiState.update { it.copy(manufacturingDate = v) }
     fun onExpiryDateChange(v: LocalDate) = _uiState.update { it.copy(expiryDate = v) }
     fun onPriceChange(v: String) = _uiState.update { it.copy(pricePerUnit = v) }
@@ -81,7 +90,8 @@ class MedicineEntryViewModel(private val repository: MedicineRepository) : ViewM
         val state = _uiState.value
         if (!validate(state)) return
 
-        val effectiveCategory = if (state.category == "Other") state.customCategory else state.category
+        val effectiveCategory =
+            if (state.category == "Other") state.customCategory else state.category
 
         val medicine = Medicine(
             id = state.id,
@@ -111,14 +121,38 @@ class MedicineEntryViewModel(private val repository: MedicineRepository) : ViewM
 
     private fun validate(state: MedicineEntryUiState): Boolean {
         return when {
-            state.name.isBlank() -> { _uiState.update { it.copy(errorMessage = "Medicine name is required") }; false }
-            state.batchNumber.isBlank() -> { _uiState.update { it.copy(errorMessage = "Batch number is required") }; false }
-            state.category.isBlank() -> { _uiState.update { it.copy(errorMessage = "Category is required") }; false }
-            state.category == "Other" && state.customCategory.isBlank() -> { _uiState.update { it.copy(errorMessage = "Please enter a custom category") }; false }
-            state.quantity.isBlank() -> { _uiState.update { it.copy(errorMessage = "Quantity is required") }; false }
-            state.manufacturingDate == null -> { _uiState.update { it.copy(errorMessage = "Manufacturing date is required") }; false }
-            state.expiryDate == null -> { _uiState.update { it.copy(errorMessage = "Expiry date is required") }; false }
-            state.expiryDate!!.isBefore(state.manufacturingDate) -> { _uiState.update { it.copy(errorMessage = "Expiry date must be after manufacturing date") }; false }
+            state.name.isBlank() -> {
+                _uiState.update { it.copy(errorMessage = "Medicine name is required") }; false
+            }
+
+            state.batchNumber.isBlank() -> {
+                _uiState.update { it.copy(errorMessage = "Batch number is required") }; false
+            }
+
+            state.category.isBlank() -> {
+                _uiState.update { it.copy(errorMessage = "Category is required") }; false
+            }
+
+            state.category == "Other" && state.customCategory.isBlank() -> {
+                _uiState.update { it.copy(errorMessage = "Please enter a custom category") }; false
+            }
+
+            state.quantity.isBlank() -> {
+                _uiState.update { it.copy(errorMessage = "Quantity is required") }; false
+            }
+
+            state.manufacturingDate == null -> {
+                _uiState.update { it.copy(errorMessage = "Manufacturing date is required") }; false
+            }
+
+            state.expiryDate == null -> {
+                _uiState.update { it.copy(errorMessage = "Expiry date is required") }; false
+            }
+
+            state.expiryDate.isBefore(state.manufacturingDate) -> {
+                _uiState.update { it.copy(errorMessage = "Expiry date must be after manufacturing date") }; false
+            }
+
             else -> true
         }
     }

@@ -1,10 +1,11 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
 }
 
-kotlin { jvmToolchain(17) } // Use Java 21 toolchain
+kotlin {
+    jvmToolchain(17) // ✅ Keep consistent (or upgrade fully to 21)
+}
 
 android {
     namespace = "com.jb.medineed.app.color"
@@ -12,6 +13,10 @@ android {
 
     defaultConfig {
         minSdk = 21
+    }
+
+    buildFeatures {
+        compose = true
     }
 
     compileOptions {
@@ -23,8 +28,7 @@ android {
         release {
             isMinifyEnabled = true
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
     }
@@ -32,14 +36,14 @@ android {
 
 dependencies {
     // Compose BOM
-    api(platform(libs.androidx.compose.bom))
+    implementation(platform(libs.androidx.compose.bom))
 
     // Compose
-    api(libs.androidx.compose.ui)
-    api(libs.androidx.compose.runtime)
-    api(libs.androidx.compose.foundation)
-    api(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.material3)
 
     // Core
-    api(libs.androidx.core.ktx)
+    implementation(libs.androidx.core.ktx)
 }

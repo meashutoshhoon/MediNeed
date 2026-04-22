@@ -25,7 +25,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Colorize
 import androidx.compose.material.icons.outlined.DarkMode
-import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -49,7 +48,6 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
@@ -61,7 +59,6 @@ import com.jb.medineed.app.presentation.common.LocalPaletteStyleIndex
 import com.jb.medineed.app.presentation.common.LocalSeedColor
 import com.jb.medineed.app.presentation.common.Route
 import com.jb.medineed.app.presentation.components.BackButton
-import com.jb.medineed.app.presentation.components.PreferenceItem
 import com.jb.medineed.app.presentation.components.PreferenceSwitch
 import com.jb.medineed.app.presentation.components.PreferenceSwitchWithDivider
 import com.jb.medineed.app.presentation.svg.DynamicColorImageVectors
@@ -72,7 +69,6 @@ import com.jb.medineed.app.util.PreferenceUtil
 import com.jb.medineed.app.util.STYLE_MONOCHROME
 import com.jb.medineed.app.util.STYLE_TONAL_SPOT
 import com.jb.medineed.app.util.paletteStyles
-import com.jb.medineed.app.util.toDisplayName
 import com.kyant.monet.LocalTonalPalettes
 import com.kyant.monet.PaletteStyle
 import com.kyant.monet.TonalPalettes
@@ -169,6 +165,7 @@ fun AppearancePreferences(onNavigateBack: () -> Unit, onNavigateTo: (String) -> 
                 ShapeIndicatorRow(
                     modifier = Modifier
                         .width(120.dp)
+                        .padding(5.dp)
                         .align(Alignment.CenterHorizontally),
                     pagerState = pagerState,
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -194,13 +191,6 @@ fun AppearancePreferences(onNavigateBack: () -> Unit, onNavigateTo: (String) -> 
                     },
                     onClick = { onNavigateTo(Route.DARK_THEME) },
                 )
-                PreferenceItem(
-                    title = stringResource(R.string.language),
-                    icon = Icons.Outlined.Language,
-                    description = LocalLocale.current.platformLocale.toDisplayName(),
-                ) {
-                    onNavigateTo(Route.LANGUAGES)
-                }
             }
         },
     )
