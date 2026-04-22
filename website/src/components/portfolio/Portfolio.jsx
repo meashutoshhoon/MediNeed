@@ -4,9 +4,7 @@ import { useState } from "react";
 import p1 from "../../assets/portfolio/p1.jpeg";
 import p2 from "../../assets/portfolio/p2.jpeg";
 import p3 from "../../assets/portfolio/p3.jpeg";
-import p4 from "../../assets/portfolio/p4.jpeg";
-import p5 from "../../assets/portfolio/p5.jpeg";
-import p6 from "../../assets/portfolio/p6.jpeg";
+
 
 
 
@@ -15,12 +13,10 @@ export default function Portfolio() {
   const [filter, setFilter] = useState("all");
 
   const projects = [
-    { id: 1, img: p1, tag: "branding", title: "Stock Management" },
-    { id: 2, img: p2, tag: "web", title: "Expiry Alerts" },
-    { id: 3, img: p3, tag: "illustrations", title: " Report " },
-    { id: 3, img: p4, tag: "illustrations", title: " Report " },
-    { id: 3, img: p5, tag: "illustrations", title: " Report " },
-    { id: 3, img: p6, tag: "illustrations", title: " Report " },
+    { id: 1, img: p1, tag: "branding", title: " " },
+    { id: 2, img: p2, tag: "web", title: " " },
+    { id: 3, img: p3, tag: "illustrations", title: "  " },
+ 
   ];
 
   const filtered =

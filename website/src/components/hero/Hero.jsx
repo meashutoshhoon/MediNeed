@@ -1,4 +1,4 @@
-import p6 from "../../assets/portfolio/p6.jpeg";
+import p6 from "../../assets/portfolio/p3.jpeg";
 
 export default function Hero() {
   return (
