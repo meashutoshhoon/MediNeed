@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.jb.medineed.app.data.repository.MedicineRepository
 import com.jb.medineed.app.domain.model.Medicine
 import com.jb.medineed.app.domain.model.SortOrder
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -21,6 +23,7 @@ data class StockListUiState(
     val isLoading: Boolean = true
 )
 
+@OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class StockListViewModel(private val repository: MedicineRepository) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")

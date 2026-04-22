@@ -1,6 +1,7 @@
 package com.jb.medineed.app.presentation.page.update
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,17 +20,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.AddShoppingCart
-import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.automirrored.rounded.Notes
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Inventory2
-import androidx.compose.material.icons.filled.Notes
-import androidx.compose.material.icons.filled.Numbers
-import androidx.compose.material.icons.filled.PlayCircle
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material.icons.rounded.AddShoppingCart
+import androidx.compose.material.icons.rounded.Bolt
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.History
+import androidx.compose.material.icons.rounded.Numbers
+import androidx.compose.material.icons.rounded.PlayCircle
+import androidx.compose.material.icons.rounded.ShoppingCart
+import androidx.compose.material.icons.rounded.Tune
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -43,12 +44,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -57,6 +58,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -83,12 +86,11 @@ fun StockUpdateScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val medicine = uiState.medicine
-    var activeTab by remember { mutableIntStateOf(0) } // 0=Quick, 1=Exact, 2=History
+    var activeTab by remember { mutableIntStateOf(0) }
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
+            TopAppBar(title = {
                 Column {
                     Text(medicine?.name ?: "Update Stock", fontWeight = FontWeight.Bold)
                     medicine?.let {
@@ -101,16 +103,10 @@ fun StockUpdateScreen(
             }, navigationIcon = {
                 IconButton(onClick = onNavigateBack) {
                     Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        null
+                        Icons.AutoMirrored.Filled.ArrowBack, null
                     )
                 }
-            }, colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
-            )
-            )
+            })
         }) { padding ->
         if (uiState.isLoading || medicine == null) {
             Box(
@@ -135,7 +131,7 @@ fun StockUpdateScreen(
                         Row(
                             Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(Icons.Default.CheckCircle, null, tint = SuccessGreen)
+                            Icon(Icons.Filled.CheckCircle, null, tint = SuccessGreen)
                             Spacer(Modifier.width(8.dp))
                             Text(
                                 "Stock updated successfully!",
@@ -220,7 +216,7 @@ fun StockUpdateScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            Icons.Default.Inventory2,
+                            Icons.Filled.Inventory2,
                             null,
                             tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(32.dp)
@@ -245,23 +241,39 @@ fun StockUpdateScreen(
 
             // Tabs
             item {
-                TabRow(selectedTabIndex = activeTab) {
-                    Tab(
-                        selected = activeTab == 0,
-                        onClick = { activeTab = 0 },
-                        text = { Text("Quick") },
-                        icon = { Icon(Icons.Default.Bolt, null, Modifier.size(16.dp)) })
-                    Tab(
-                        selected = activeTab == 1,
-                        onClick = { activeTab = 1 },
-                        text = { Text("Exact") },
-                        icon = { Icon(Icons.Default.Edit, null, Modifier.size(16.dp)) })
-                    Tab(
-                        selected = activeTab == 2,
-                        onClick = { activeTab = 2 },
-                        text = { Text("History") },
-                        icon = { Icon(Icons.Default.History, null, Modifier.size(16.dp)) })
-                }
+                SecondaryTabRow(
+                    selectedTabIndex = activeTab,
+                    modifier = Modifier,
+                    containerColor = TabRowDefaults.primaryContainerColor,
+                    contentColor = TabRowDefaults.primaryContentColor,
+                    indicator = {
+                        Box(
+                            modifier = Modifier
+                                .tabIndicatorOffset(activeTab)
+                                .height(4.dp)
+                                .padding(horizontal = 8.dp)
+                                .clip(RoundedCornerShape(50))
+                                .background(MaterialTheme.colorScheme.primary)
+                        )
+                    },
+                    divider = @Composable { HorizontalDivider() },
+                    tabs = {
+                        Tab(
+                            selected = activeTab == 0,
+                            onClick = { activeTab = 0 },
+                            text = { Text("Quick") },
+                            icon = { Icon(Icons.Rounded.Bolt, null, Modifier.size(16.dp)) })
+                        Tab(
+                            selected = activeTab == 1,
+                            onClick = { activeTab = 1 },
+                            text = { Text("Exact") },
+                            icon = { Icon(Icons.Rounded.Edit, null, Modifier.size(16.dp)) })
+                        Tab(
+                            selected = activeTab == 2,
+                            onClick = { activeTab = 2 },
+                            text = { Text("History") },
+                            icon = { Icon(Icons.Rounded.History, null, Modifier.size(16.dp)) })
+                    })
             }
 
             // Tab content
@@ -273,14 +285,14 @@ fun StockUpdateScreen(
                             value = uiState.note,
                             onValueChange = viewModel::onNoteChange,
                             label = { Text("Note (optional)") },
-                            leadingIcon = { Icon(Icons.Default.Notes, null) },
+                            leadingIcon = { Icon(Icons.AutoMirrored.Rounded.Notes, null) },
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true
                         )
                     }
                     item {
                         Text(
-                            "Sell Units",
+                            text = "Sell Units",
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.SemiBold,
                             color = ErrorRed
@@ -293,11 +305,11 @@ fun StockUpdateScreen(
                                     onClick = { viewModel.sell(qty) },
                                     modifier = Modifier.weight(1f),
                                     colors = ButtonDefaults.outlinedButtonColors(contentColor = ErrorRed),
-                                    border = ButtonDefaults.outlinedButtonBorder.copy(
-                                        brush = androidx.compose.ui.graphics.SolidColor(
-                                            ErrorRed.copy(
-                                                0.5f
-                                            )
+                                    border = ButtonDefaults.outlinedButtonBorder(
+                                        enabled = true,
+                                    ).copy(
+                                        brush = SolidColor(
+                                            ErrorRed.copy(alpha = 0.5f)
                                         )
                                     )
                                 ) {
@@ -336,7 +348,7 @@ fun StockUpdateScreen(
                             value = uiState.adjustmentAmount,
                             onValueChange = viewModel::onAdjustmentChange,
                             label = { Text("New Exact Quantity") },
-                            leadingIcon = { Icon(Icons.Default.Numbers, null) },
+                            leadingIcon = { Icon(Icons.Rounded.Numbers, null) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true
@@ -347,7 +359,7 @@ fun StockUpdateScreen(
                             value = uiState.note,
                             onValueChange = viewModel::onNoteChange,
                             label = { Text("Note (optional)") },
-                            leadingIcon = { Icon(Icons.Default.Notes, null) },
+                            leadingIcon = { Icon(Icons.AutoMirrored.Rounded.Notes, null) },
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true
                         )
@@ -363,7 +375,7 @@ fun StockUpdateScreen(
                                 .height(52.dp),
                             enabled = uiState.adjustmentAmount.isNotBlank()
                         ) {
-                            Icon(Icons.Default.Tune, null)
+                            Icon(Icons.Rounded.Tune, null)
                             Spacer(Modifier.width(8.dp))
                             Text(
                                 "Set Quantity to ${uiState.adjustmentAmount.ifBlank { "?" }}",
@@ -415,11 +427,11 @@ private fun LabelValue(label: String, value: String) {
 @Composable
 private fun TransactionRow(txn: StockTransaction) {
     val (color, icon, prefix) = when (txn.transactionType) {
-        TransactionType.SALE -> Triple(ErrorRed, Icons.Default.ShoppingCart, "-")
-        TransactionType.RESTOCK -> Triple(SuccessGreen, Icons.Default.AddShoppingCart, "+")
-        TransactionType.ADJUSTMENT -> Triple(WarningOrange, Icons.Default.Tune, "→")
+        TransactionType.SALE -> Triple(ErrorRed, Icons.Rounded.ShoppingCart, "-")
+        TransactionType.RESTOCK -> Triple(SuccessGreen, Icons.Rounded.AddShoppingCart, "+")
+        TransactionType.ADJUSTMENT -> Triple(WarningOrange, Icons.Rounded.Tune, "→")
         TransactionType.INITIAL -> Triple(
-            MaterialTheme.colorScheme.primary, Icons.Default.PlayCircle, "+"
+            MaterialTheme.colorScheme.primary, Icons.Rounded.PlayCircle, "+"
         )
     }
     val sdf = SimpleDateFormat("dd MMM yyyy, HH:mm", LocalLocale.current.platformLocale)

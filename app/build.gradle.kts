@@ -5,7 +5,6 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
@@ -46,7 +45,7 @@ android {
     defaultConfig {
         applicationId = "com.jb.medineed.app"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = baseVersionName
 
@@ -61,8 +60,7 @@ android {
             isShrinkResources = true
 
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
 
             if (keystoreFile.exists()) {
@@ -98,9 +96,7 @@ android {
     // Lint / Packaging
     lint {
         disable += listOf(
-            "MissingTranslation",
-            "ExtraTranslation",
-            "MissingQuantity"
+            "MissingTranslation", "ExtraTranslation", "MissingQuantity"
         )
     }
 
@@ -114,7 +110,7 @@ base {
     archivesName = "MediNeed-${android.defaultConfig.versionName}"
 }
 
-kotlin { jvmToolchain(21) }
+kotlin { jvmToolchain(17) }
 
 ktfmt { kotlinLangStyle() }
 

@@ -1,34 +1,69 @@
 package com.jb.medineed.app.presentation.page.reports
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.automirrored.filled.ReceiptLong
+import androidx.compose.material.icons.automirrored.rounded.TrendingDown
+import androidx.compose.material.icons.filled.AddShoppingCart
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.CurrencyRupee
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.Inventory2
+import androidx.compose.material.icons.filled.PictureAsPdf
+import androidx.compose.material.icons.filled.PlayCircle
+import androidx.compose.material.icons.filled.RemoveShoppingCart
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.jb.medineed.app.data.local.entity.TransactionType
 import com.jb.medineed.app.presentation.components.EmptyState
 import com.jb.medineed.app.presentation.components.StatCard
+import com.jb.medineed.app.presentation.theme.ErrorRed
 import com.jb.medineed.app.presentation.theme.SuccessGreen
 import com.jb.medineed.app.presentation.theme.WarningOrange
 import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
-import java.util.*
-import androidx.compose.ui.platform.LocalLocale
-import com.jb.medineed.app.presentation.theme.ErrorRed
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReportsScreen(
-    onNavigateBack: () -> Unit,
-    viewModel: ReportsViewModel = koinViewModel()
+    onNavigateBack: () -> Unit, viewModel: ReportsViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -45,12 +80,19 @@ fun ReportsScreen(
             TopAppBar(
                 title = { Text("Reports & Analytics", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, null) }
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            null
+                        )
+                    }
                 },
                 actions = {
                     if (uiState.isGeneratingPdf) {
                         CircularProgressIndicator(
-                            modifier = Modifier.size(24.dp).padding(end = 8.dp),
+                            modifier = Modifier
+                                .size(24.dp)
+                                .padding(end = 8.dp),
                             color = MaterialTheme.colorScheme.onPrimary,
                             strokeWidth = 2.dp
                         )
@@ -59,10 +101,8 @@ fun ReportsScreen(
                             Icon(Icons.Default.PictureAsPdf, "Export PDF")
                         }
                     }
-                }
-            )
-        }
-    ) { padding ->
+                })
+        }) { padding ->
         LazyColumn(
             modifier = Modifier.padding(padding),
             contentPadding = PaddingValues(16.dp),
@@ -70,50 +110,87 @@ fun ReportsScreen(
         ) {
             // Period filter
             item {
-                Text("Report Period", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
+                Text(
+                    "Report Period",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.SemiBold
+                )
                 Spacer(Modifier.height(6.dp))
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     items(ReportPeriod.entries) { period ->
                         FilterChip(
                             selected = uiState.period == period,
                             onClick = { viewModel.onPeriodChange(period) },
-                            label = { Text(period.label) }
-                        )
+                            label = { Text(period.label) })
                     }
                 }
             }
 
             // Stats
             item {
-                Text("Overview", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
+                Text(
+                    "Overview",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.SemiBold
+                )
                 Spacer(Modifier.height(8.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    StatCard("Total Meds", uiState.totalMedicines.toString(),
-                        Icons.Default.Inventory2, MaterialTheme.colorScheme.primary, Modifier.weight(1f))
-                    StatCard("Units Sold", uiState.totalSold.toString(),
-                        Icons.Default.ShoppingCart, SuccessGreen, Modifier.weight(1f))
+                    StatCard(
+                        "Total Meds",
+                        uiState.totalMedicines.toString(),
+                        Icons.Default.Inventory2,
+                        MaterialTheme.colorScheme.primary,
+                        Modifier.weight(1f)
+                    )
+                    StatCard(
+                        "Units Sold",
+                        uiState.totalSold.toString(),
+                        Icons.Default.ShoppingCart,
+                        SuccessGreen,
+                        Modifier.weight(1f)
+                    )
                 }
                 Spacer(Modifier.height(8.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    StatCard("Revenue", "₹%.0f".format(uiState.totalSales),
-                        Icons.Default.CurrencyRupee, SuccessGreen, Modifier.weight(1f))
-                    StatCard("Out of Stock", uiState.outOfStockCount.toString(),
-                        Icons.Default.RemoveShoppingCart, ErrorRed, Modifier.weight(1f))
+                    StatCard(
+                        "Revenue",
+                        "₹%.0f".format(uiState.totalSales),
+                        Icons.Default.CurrencyRupee,
+                        SuccessGreen,
+                        Modifier.weight(1f)
+                    )
+                    StatCard(
+                        "Out of Stock",
+                        uiState.outOfStockCount.toString(),
+                        Icons.Default.RemoveShoppingCart,
+                        ErrorRed,
+                        Modifier.weight(1f)
+                    )
                 }
                 Spacer(Modifier.height(8.dp))
-                StatCard("Low Stock", uiState.lowStockCount.toString(),
-                    Icons.Default.TrendingDown, WarningOrange, Modifier.fillMaxWidth())
+                StatCard(
+                    "Low Stock",
+                    uiState.lowStockCount.toString(),
+                    Icons.AutoMirrored.Rounded.TrendingDown,
+                    WarningOrange,
+                    Modifier.fillMaxWidth()
+                )
             }
 
             // Export PDF button
             item {
                 Button(
                     onClick = { viewModel.generateAndSharePdf() },
-                    modifier = Modifier.fillMaxWidth().height(52.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(52.dp),
                     enabled = !uiState.isGeneratingPdf
                 ) {
                     if (uiState.isGeneratingPdf) {
-                        CircularProgressIndicator(modifier = Modifier.size(20.dp), color = MaterialTheme.colorScheme.onPrimary)
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
                         Spacer(Modifier.width(8.dp))
                         Text("Generating PDF…")
                     } else {
@@ -127,16 +204,29 @@ fun ReportsScreen(
             // Transaction history section header
             item {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Transaction History", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
-                    Text("${uiState.transactions.size} records", style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurface.copy(0.5f))
+                    Text(
+                        "Transaction History",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text(
+                        "${uiState.transactions.size} records",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurface.copy(0.5f)
+                    )
                 }
                 HorizontalDivider(modifier = Modifier.padding(top = 4.dp))
             }
 
             if (uiState.isLoading) {
                 item {
-                    Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
+                    Box(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(32.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
                         CircularProgressIndicator()
                     }
                 }
@@ -144,32 +234,47 @@ fun ReportsScreen(
                 item {
                     EmptyState(
                         message = "No transactions found\nfor ${uiState.period.label.lowercase()}.",
-                        icon = Icons.Default.ReceiptLong
+                        icon = Icons.AutoMirrored.Filled.ReceiptLong
                     )
                 }
             } else {
                 items(uiState.transactions.take(50)) { txn ->
                     val allMeds = uiState.allMedicines.associateBy { it.id }
                     val medicineName = allMeds[txn.medicineId]?.name ?: "Unknown"
-                    val sdf = SimpleDateFormat("dd MMM yy  HH:mm", LocalLocale.current.platformLocale)
+                    val sdf =
+                        SimpleDateFormat("dd MMM yy  HH:mm", LocalLocale.current.platformLocale)
 
                     val (color, icon) = when (txn.transactionType) {
-                        TransactionType.SALE       -> SuccessGreen to Icons.Default.ShoppingCart
-                        TransactionType.RESTOCK    -> MaterialTheme.colorScheme.primary to Icons.Default.AddShoppingCart
+                        TransactionType.SALE -> SuccessGreen to Icons.Default.ShoppingCart
+                        TransactionType.RESTOCK -> MaterialTheme.colorScheme.primary to Icons.Default.AddShoppingCart
                         TransactionType.ADJUSTMENT -> WarningOrange to Icons.Default.Tune
-                        TransactionType.INITIAL    -> MaterialTheme.colorScheme.primary to Icons.Default.PlayCircle
+                        TransactionType.INITIAL -> MaterialTheme.colorScheme.primary to Icons.Default.PlayCircle
                     }
 
                     Card(colors = CardDefaults.cardColors(containerColor = color.copy(alpha = 0.07f))) {
-                        Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Row(
+                            Modifier.padding(12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             Icon(icon, null, tint = color, modifier = Modifier.size(20.dp))
                             Spacer(Modifier.width(10.dp))
                             Column(Modifier.weight(1f)) {
-                                Text(medicineName, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
-                                Text(txn.transactionType.name.lowercase().replaceFirstChar { it.uppercase() },
-                                    style = MaterialTheme.typography.labelSmall, color = color)
-                                Text(sdf.format(Date(txn.timestamp)), style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onSurface.copy(0.45f))
+                                Text(
+                                    medicineName,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Medium
+                                )
+                                Text(
+                                    txn.transactionType.name.lowercase()
+                                    .replaceFirstChar { it.uppercase() },
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = color
+                                )
+                                Text(
+                                    sdf.format(Date(txn.timestamp)),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurface.copy(0.45f)
+                                )
                             }
                             Column(horizontalAlignment = Alignment.End) {
                                 val change = txn.quantityChange
@@ -179,9 +284,11 @@ fun ReportsScreen(
                                     fontWeight = FontWeight.Bold,
                                     style = MaterialTheme.typography.titleSmall
                                 )
-                                Text("${txn.quantityBefore}→${txn.quantityAfter}",
+                                Text(
+                                    "${txn.quantityBefore}→${txn.quantityAfter}",
                                     style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onSurface.copy(0.45f))
+                                    color = MaterialTheme.colorScheme.onSurface.copy(0.45f)
+                                )
                             }
                         }
                     }
@@ -203,10 +310,17 @@ fun ReportsScreen(
             uiState.errorMessage?.let { err ->
                 item {
                     Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)) {
-                        Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Row(
+                            Modifier.padding(12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             Icon(Icons.Default.Error, null, tint = MaterialTheme.colorScheme.error)
                             Spacer(Modifier.width(8.dp))
-                            Text(err, Modifier.weight(1f), color = MaterialTheme.colorScheme.onErrorContainer)
+                            Text(
+                                err,
+                                Modifier.weight(1f),
+                                color = MaterialTheme.colorScheme.onErrorContainer
+                            )
                             IconButton(onClick = viewModel::clearError) {
                                 Icon(Icons.Default.Close, null)
                             }

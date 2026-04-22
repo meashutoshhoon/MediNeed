@@ -140,7 +140,6 @@ androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espres
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
@@ -154,17 +153,14 @@ ktfmt-gradle = { id = "com.ncorti.ktfmt.gradle", version.ref = "ktfmt" }
 [bundles]
 
 # Core
-core = [
-    "androidx-activity-compose",
+core = ["androidx-activity-compose",
     "android-material",
     "androidx-appcompat",
     "androidx-splashScreen",
-    "androidx-core-ktx"
-]
+    "androidx-core-ktx"]
 
 # Compose
-androidxCompose = [
-    "androidx-compose-ui",
+androidxCompose = ["androidx-compose-ui",
     "androidx-compose-ui-tooling-preview",
     "androidx-compose-material-iconsExtended",
     "androidx-compose-material3",
@@ -172,10 +168,7 @@ androidxCompose = [
     "androidx-compose-foundation",
     "androidx-navigation-compose",
     "androidx-compose-animation",
-    "androidx-constraintlayout-compose"
-]
+    "androidx-constraintlayout-compose"]
 
 # Accompanist
-accompanist = [
-    "accompanist-permissions"
-]
+accompanist = ["accompanist-permissions"]

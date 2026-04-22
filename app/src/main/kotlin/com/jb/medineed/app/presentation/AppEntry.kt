@@ -1,18 +1,12 @@
 package com.jb.medineed.app.presentation
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.jb.medineed.app.presentation.common.LocalWindowWidthState
 import com.jb.medineed.app.presentation.common.Route
 import com.jb.medineed.app.presentation.common.animatedComposable
 import com.jb.medineed.app.presentation.common.arg
@@ -24,17 +18,12 @@ import com.jb.medineed.app.presentation.page.outofstock.OutOfStockScreen
 import com.jb.medineed.app.presentation.page.reports.ReportsScreen
 import com.jb.medineed.app.presentation.page.settings.appearance.AppearancePreferences
 import com.jb.medineed.app.presentation.page.settings.appearance.DarkThemePreferences
-import com.jb.medineed.app.presentation.page.settings.appearance.LanguagePage
 import com.jb.medineed.app.presentation.page.stock.StockListScreen
 import com.jb.medineed.app.presentation.page.update.StockUpdateScreen
 
 @Composable
 fun AppEntry() {
     val navController = rememberNavController()
-    LocalContext.current
-    LocalView.current
-    val windowWidth = LocalWindowWidthState.current
-    rememberCoroutineScope()
 
     val onNavigateBack: () -> Unit = {
         with(navController) {
@@ -47,54 +36,42 @@ fun AppEntry() {
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
     AdaptiveNavigation(
-        currentRoute = currentRoute,
-        onNavigateToRoute = { route ->
+        currentRoute = currentRoute, onNavigateToRoute = { route ->
             navController.navigate(route) {
                 popUpTo(navController.graph.startDestinationId) { saveState = true }
                 launchSingleTop = true
                 restoreState = true
             }
-        }
-    ) {
+        }) {
         NavHost(
-            navController = navController,
-            startDestination = Route.STOCK_LIST
+            navController = navController, startDestination = Route.STOCK_LIST
         ) {
 
             animatedComposable(Route.STOCK_LIST) {
-                StockListScreen(
-                    onAddMedicine = {
-                        navController.navigate(Route.MEDICINE_ENTRY)
-                    },
-                    onSettings = {
-                        navController.navigate(Route.SETTINGS_PAGE)
-                    },
-                    onMedicineClick = { id ->
-                        navController.navigate(Route.STOCK_UPDATE id id)
-                    },
-                    onEditClick = { id ->
-                        navController.navigate(Route.EDIT_MEDICINE id id)
-                    }
-                )
+                StockListScreen(onAddMedicine = {
+                    navController.navigate(Route.MEDICINE_ENTRY)
+                }, onSettings = {
+                    navController.navigate(Route.SETTINGS_PAGE)
+                }, onMedicineClick = { id ->
+                    navController.navigate(Route.STOCK_UPDATE id id)
+                }, onEditClick = { id ->
+                    navController.navigate(Route.EDIT_MEDICINE id id)
+                })
             }
 
             animatedComposable(Route.MEDICINE_ENTRY) {
                 MedicineEntryScreen(
-                    onNavigateBack = { navController.popBackStack() }
-                )
+                    onNavigateBack = { navController.popBackStack() })
             }
 
             animatedComposable(
                 Route.EDIT_MEDICINE arg Route.MEDICINE_ID
             ) { backStack ->
-                val id = backStack.arguments
-                    ?.getString(Route.MEDICINE_ID)
-                    ?.toLong() ?: return@animatedComposable
+                val id = backStack.arguments?.getString(Route.MEDICINE_ID)?.toLong()
+                    ?: return@animatedComposable
 
                 MedicineEntryScreen(
-                    medicineId = id,
-                    onNavigateBack = { navController.popBackStack() }
-                )
+                    medicineId = id, onNavigateBack = { navController.popBackStack() })
             }
 
             animatedComposable(Route.LOW_STOCK) {
@@ -102,8 +79,7 @@ fun AppEntry() {
                     onNavigateBack = { navController.popBackStack() },
                     onMedicineClick = { id ->
                         navController.navigate(Route.STOCK_UPDATE id id)
-                    }
-                )
+                    })
             }
 
             animatedComposable(Route.OUT_OF_STOCK) {
@@ -111,37 +87,30 @@ fun AppEntry() {
                     onNavigateBack = { navController.popBackStack() },
                     onMedicineClick = { id ->
                         navController.navigate(Route.STOCK_UPDATE id id)
-                    }
-                )
+                    })
             }
 
             animatedComposable(Route.REPORTS) {
                 ReportsScreen(
-                    onNavigateBack = { navController.popBackStack() }
-                )
+                    onNavigateBack = { navController.popBackStack() })
             }
 
             animatedComposable(
                 Route.STOCK_UPDATE arg Route.MEDICINE_ID
             ) { backStack ->
-                val id = backStack.arguments
-                    ?.getString(Route.MEDICINE_ID)
-                    ?.toLong() ?: return@animatedComposable
+                val id = backStack.arguments?.getString(Route.MEDICINE_ID)?.toLong()
+                    ?: return@animatedComposable
 
                 StockUpdateScreen(
-                    medicineId = id,
-                    onNavigateBack = { navController.popBackStack() }
-                )
+                    medicineId = id, onNavigateBack = { navController.popBackStack() })
             }
 
             settingsGraph(
-                onNavigateBack = onNavigateBack,
-                onNavigateTo = { route ->
+                onNavigateBack = onNavigateBack, onNavigateTo = { route ->
                     navController.navigate(route) {
                         launchSingleTop = true
                     }
-                }
-            )
+                })
         }
     }
 }
@@ -154,7 +123,6 @@ fun NavGraphBuilder.settingsGraph(
         animatedComposable(Route.SETTINGS_PAGE) {
             AppearancePreferences(onNavigateBack = onNavigateBack, onNavigateTo = onNavigateTo)
         }
-        animatedComposable(Route.LANGUAGES) { LanguagePage { onNavigateBack() } }
         animatedComposable(Route.DARK_THEME) { DarkThemePreferences { onNavigateBack() } }
     }
 }

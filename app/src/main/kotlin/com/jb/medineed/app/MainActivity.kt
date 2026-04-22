@@ -1,7 +1,6 @@
 package com.jb.medineed.app
 
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -14,10 +13,6 @@ import com.jb.medineed.app.presentation.AppEntry
 import com.jb.medineed.app.presentation.common.LocalDarkTheme
 import com.jb.medineed.app.presentation.common.SettingsProvider
 import com.jb.medineed.app.presentation.theme.MediTheme
-import com.jb.medineed.app.util.PreferenceUtil
-import com.jb.medineed.app.util.setLanguage
-import kotlinx.coroutines.runBlocking
-import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {
 
@@ -26,32 +21,24 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        if (Build.VERSION.SDK_INT < 33) {
-            runBlocking {
-                setLanguage(PreferenceUtil.getLocaleFromPreference())
-            }
-        }
-
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT),
             navigationBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT)
         )
 
         setContent {
-            KoinContext {
-                val windowSizeClass = calculateWindowSizeClass(this)
+            val windowSizeClass = calculateWindowSizeClass(this)
 
-                SettingsProvider(
-                    windowWidthSizeClass = windowSizeClass.widthSizeClass
+            SettingsProvider(
+                windowWidthSizeClass = windowSizeClass.widthSizeClass
+            ) {
+                val themeState = LocalDarkTheme.current
+
+                MediTheme(
+                    darkTheme = themeState.isDarkTheme(),
+                    isHighContrastModeEnabled = themeState.isHighContrastModeEnabled
                 ) {
-                    val themeState = LocalDarkTheme.current
-
-                    MediTheme(
-                        darkTheme = themeState.isDarkTheme(),
-                        isHighContrastModeEnabled = themeState.isHighContrastModeEnabled
-                    ) {
-                        AppEntry()
-                    }
+                    AppEntry()
                 }
             }
         }
